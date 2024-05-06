@@ -38,6 +38,11 @@ def predict():
     prediction = predict_sentiment(text)
     return jsonify({'prediction': prediction})
 
+
+@app.route('/', methods=['GET'])
+def home():
+    return "Hello, World!"
+
 if __name__ == '__main__':
     app.run(debug=False, port=3000, use_reloader=False, use_debugger=False)
 
