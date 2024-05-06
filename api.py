@@ -43,7 +43,7 @@ def predict():
 def home():
     return "Hello, World!"
 
-if __name__ == '__main__':
-    app.run(debug=False, port=3000, use_reloader=False, use_debugger=False)
+# if __name__ == '__main__':
+#     app.run(debug=False, port=3000, use_reloader=False, use_debugger=False)
 
 
