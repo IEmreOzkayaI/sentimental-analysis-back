@@ -1,7 +1,7 @@
 import jwt
 import datetime
 from flask import request, jsonify
-from .models import User, db
+from .models import User, db , Post
 from flask import current_app as app  # Assuming the Flask app is imported as 'app' in your models
 from .services import predict_sentiment
 
@@ -31,7 +31,7 @@ def login():
                 'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=24)  # Token expires in 24 hours
             }, app.config['SECRET_KEY'], algorithm="HS256")  # Ensure you have a SECRET_KEY configured in your app's config
 
-            return jsonify({'token': token}), 200
+            return jsonify({'token': token ,"user":{ "name": user.name, "surname":user.surname}}), 200
         else:
             return jsonify({'message': 'Invalid credentials'}), 401
 
@@ -62,11 +62,25 @@ def register():
             return jsonify({'message': 'Registration failed'}), 500
     return jsonify({'message': 'Method not allowed'}), 405
 
-def logout():
-    return "Logout"
-
 def post():
-    return "Post"
+    if request.method == 'POST':
+        user = request.current_user  # token_required tarafından sağlanan kullanıcı bilgisini al
+        data = request.get_json()  # JSON verisini al
+        title= data.get('title')
+        content = data.get('content')        
+        date  =  datetime.datetime.now().strftime("%I:%M %p - %d/%m/%Y")
+        sentiment = predict_sentiment(content)
+                
+        new_post = Post(title=title, content=content, user=user, date=date, sentiment=sentiment)
+        db.session.add(new_post)
+        try:
+            db.session.commit()
+            return jsonify({'message': 'Post created successfully'}), 201
+        except Exception as e:
+            db.session.rollback()
+            print(e)  # Log or print the exception
+            return jsonify({'message': 'Post creation failed'}), 500
+    return jsonify({'message': 'Method not allowed'}), 405
 
 def comment():
     return "Comment"
