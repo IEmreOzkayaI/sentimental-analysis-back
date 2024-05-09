@@ -30,11 +30,3 @@ class Comment(db.Model):
     post = db.relationship('Post', backref=db.backref('comments', lazy=True))
     date = db.Column(db.String(60), nullable=False)
     sentiment = db.Column(db.String(80), nullable=False)
-    
-class Like(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    user = db.relationship('User', backref=db.backref('likes', lazy=True))
-    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
-    post = db.relationship('Post', backref=db.backref('likes', lazy=True))
-    

@@ -19,7 +19,7 @@ def token_required(f):
             current_user = User.query.get(data['user_id'])
             if not current_user:
                 return jsonify({'message': 'User not found'}), 404
-            request.current_user = current_user  # Kullanıcı bilgisini request'e ekle
+            request.current_user = current_user
                    
         except:
             return jsonify({'message': 'Token is invalid!'}), 401
